@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Демо интернационализации</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="p-4">
+    <div class="container">
+        <h1>🌍 Демо интернационализации RSS Reader</h1>
+        
+        <div class="alert alert-info">
+            <h4>Что тестируем:</h4>
+            <ul>
+                <li>Все тексты интерфейса управляются через i18next</li>
+                <li>Состояние хранит коды ошибок, а не тексты</li>
+                <li>yup.setLocale() настроен для возврата кодов ошибок</li>
+                <li>Переводы легко расширяются для новых языков</li>
+            </ul>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <h3>🗂️ Структура переводов</h3>
+                <pre><code>{
+  appTitle: 'RSS Reader',
+  urlLabel: 'URL RSS-потока',
+  addButton: 'Добавить',
+  loadingButton: 'Загрузка...',
+  errors: {
+    required: 'URL не может быть пустым',
+    invalidUrl: 'Ссылка должна быть валидным URL',
+    duplicate: 'RSS поток уже существует'
+  }
+}</code></pre>
+            </div>
+            
+            <div class="col-md-6">
+                <h3>🎯 Коды ошибок в состоянии</h3>
+                <div class="alert alert-light">
+                    <p><strong>Раньше:</strong></p>
+                    <code>state.form.error = "URL не может быть пустым"</code>
+                    
+                    <p><strong>Теперь:</strong></p>
+                    <code>state.form.error = "required"</code>
+                    
+                    <p><strong>Отображение:</strong></p>
+                    <code>i18n.t(`errors.${state.form.error}`)</code>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4">
+            <h3>🧪 Как тестировать в основном приложении</h3>
+            <ol>
+                <li>Откройте <code>http://localhost:5173/</code></li>
+                <li>Убедитесь, что все тексты отображаются корректно</li>
+                <li>Протестируйте ошибки валидации - они должны показывать переведенные тексты</li>
+                <li>В консоли браузера можно проверить:
+                    <ul>
+                        <li><code>window.i18next?.language</code> - текущий язык</li>
+                        <li><code>window.i18next?.t('addButton')</code> - получить перевод</li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+
+        <div class="mt-4">
+            <h3>✨ Преимущества новой архитектуры</h3>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">🌍 Централизация</h5>
+                            <p class="card-text">Все тексты в одном месте, легко управлять и обновлять</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">🔧 Расширяемость</h5>
+                            <p class="card-text">Добавление нового языка займет несколько минут</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">📝 Чистый код</h5>
+                            <p class="card-text">Состояние хранит логические коды, а не UI тексты</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
