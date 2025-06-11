@@ -1,108 +1,108 @@
 export default (state, elements, i18n, showPostPreview) => {
-  const { form, urlInput, feedback, submitButton } = elements;
+  const { form, urlInput, feedback, submitButton } = elements
 
   const clearValidationClasses = () => {
-    urlInput.classList.remove('is-invalid', 'is-valid');
-  };
+    urlInput.classList.remove('is-invalid', 'is-valid')
+  }
 
   const updateLabels = () => {
     // Обновляем атрибуты и тексты с переводами
-    const urlLabel = document.querySelector('label[for="url-input"]');
+    const urlLabel = document.querySelector('label[for="url-input"]')
     if (urlLabel) {
-      urlLabel.textContent = i18n.t('urlLabel');
+      urlLabel.textContent = i18n.t('urlLabel')
     }
-    
-    urlInput.placeholder = i18n.t('urlPlaceholder');
-    
-    const urlHelp = document.getElementById('url-help');
+
+    urlInput.placeholder = i18n.t('urlPlaceholder')
+
+    const urlHelp = document.getElementById('url-help')
     if (urlHelp) {
-      urlHelp.textContent = i18n.t('urlExample');
+      urlHelp.textContent = i18n.t('urlExample')
     }
-    
-    const appTitle = document.querySelector('h1');
+
+    const appTitle = document.querySelector('h1')
     if (appTitle) {
       appTitle.innerHTML = `
         <i class="bi bi-rss-fill me-2"></i>
         ${i18n.t('appTitle')}
-      `;
+      `
     }
-    
-    const appDescription = document.querySelector('.card-header p');
+
+    const appDescription = document.querySelector('.card-header p')
     if (appDescription) {
-      appDescription.textContent = i18n.t('appDescription');
+      appDescription.textContent = i18n.t('appDescription')
     }
 
     // Обновляем тексты модального окна
-    const modalTitle = document.getElementById('post-preview-modal-label');
+    const modalTitle = document.getElementById('post-preview-modal-label')
     if (modalTitle) {
-      modalTitle.textContent = i18n.t('modal.previewTitle');
+      modalTitle.textContent = i18n.t('modal.previewTitle')
     }
 
-    const modalReadFullText = document.getElementById('modal-read-full-text');
+    const modalReadFullText = document.getElementById('modal-read-full-text')
     if (modalReadFullText) {
-      modalReadFullText.textContent = i18n.t('modal.readFullArticle');
+      modalReadFullText.textContent = i18n.t('modal.readFullArticle')
     }
 
-    const modalCloseBtn = document.getElementById('modal-close-btn');
+    const modalCloseBtn = document.getElementById('modal-close-btn')
     if (modalCloseBtn) {
-      modalCloseBtn.textContent = i18n.t('modal.close');
+      modalCloseBtn.textContent = i18n.t('modal.close')
     }
-  };
+  }
 
   const renderForm = () => {
-    const buttonText = submitButton.querySelector('.button-text');
-    const spinner = submitButton.querySelector('.loading-spinner');
+    const buttonText = submitButton.querySelector('.button-text')
+    const spinner = submitButton.querySelector('.loading-spinner')
 
     if (state.form.status === 'filling') {
-      urlInput.removeAttribute('disabled');
-      submitButton.removeAttribute('disabled');
-      clearValidationClasses();
-      feedback.innerHTML = '';
-      buttonText.textContent = i18n.t('addButton');
-      spinner.classList.add('d-none');
+      urlInput.removeAttribute('disabled')
+      submitButton.removeAttribute('disabled')
+      clearValidationClasses()
+      feedback.innerHTML = ''
+      buttonText.textContent = i18n.t('addButton')
+      spinner.classList.add('d-none')
     }
 
     if (state.form.status === 'processing') {
-      urlInput.setAttribute('disabled', 'disabled');
-      submitButton.setAttribute('disabled', 'disabled');
-      clearValidationClasses();
-      feedback.innerHTML = '';
-      buttonText.textContent = i18n.t('loadingButton');
-      spinner.classList.remove('d-none');
+      urlInput.setAttribute('disabled', 'disabled')
+      submitButton.setAttribute('disabled', 'disabled')
+      clearValidationClasses()
+      feedback.innerHTML = ''
+      buttonText.textContent = i18n.t('loadingButton')
+      spinner.classList.remove('d-none')
     }
 
     if (state.form.status === 'success') {
-      urlInput.removeAttribute('disabled');
-      submitButton.removeAttribute('disabled');
-      clearValidationClasses();
-      urlInput.classList.add('is-valid');
-      feedback.innerHTML = `<div class="alert alert-success">${i18n.t('success.feedAdded')}</div>`;
-      form.reset();
+      urlInput.removeAttribute('disabled')
+      submitButton.removeAttribute('disabled')
+      clearValidationClasses()
+      urlInput.classList.add('is-valid')
+      feedback.innerHTML = `<div class="alert alert-success">${i18n.t('success.feedAdded')}</div>`
+      form.reset()
       // Убираем класс is-valid после сброса формы
-      setTimeout(() => clearValidationClasses(), 100);
-      urlInput.focus();
-      buttonText.textContent = i18n.t('addButton');
-      spinner.classList.add('d-none');
+      setTimeout(() => clearValidationClasses(), 100)
+      urlInput.focus()
+      buttonText.textContent = i18n.t('addButton')
+      spinner.classList.add('d-none')
     }
 
     if (state.form.status === 'error') {
-      urlInput.removeAttribute('disabled');
-      submitButton.removeAttribute('disabled');
-      clearValidationClasses();
-      urlInput.classList.add('is-invalid');
-      const errorMessage = i18n.t(`errors.${state.form.error}`);
-      feedback.innerHTML = `<div class="alert alert-danger">${errorMessage}</div>`;
-      urlInput.focus();
-      buttonText.textContent = i18n.t('addButton');
-      spinner.classList.add('d-none');
+      urlInput.removeAttribute('disabled')
+      submitButton.removeAttribute('disabled')
+      clearValidationClasses()
+      urlInput.classList.add('is-invalid')
+      const errorMessage = i18n.t(`errors.${state.form.error}`)
+      feedback.innerHTML = `<div class="alert alert-danger">${errorMessage}</div>`
+      urlInput.focus()
+      buttonText.textContent = i18n.t('addButton')
+      spinner.classList.add('d-none')
     }
-  };
+  }
 
   const renderFeeds = () => {
-    const feedsContainer = document.getElementById('feeds');
+    const feedsContainer = document.getElementById('feeds')
     if (state.feeds.length === 0) {
-      feedsContainer.innerHTML = '';
-      return;
+      feedsContainer.innerHTML = ''
+      return
     }
 
     const feedsHtml = state.feeds.map(feed => `
@@ -116,15 +116,17 @@ export default (state, elements, i18n, showPostPreview) => {
           </small>
         </div>
       </div>
-    `).join('');
+    `).join('')
 
     // Индикатор автоматического обновления
-    const updateIndicator = state.feeds.length > 0 ? `
+    const updateIndicator = state.feeds.length > 0
+      ? `
       <small class="text-muted ms-2">
         <i class="bi bi-arrow-clockwise me-1"></i>
         Автообновление каждые 5 сек
       </small>
-    ` : '';
+    `
+      : ''
 
     feedsContainer.innerHTML = `
       <div class="card">
@@ -139,20 +141,20 @@ export default (state, elements, i18n, showPostPreview) => {
           ${feedsHtml}
         </div>
       </div>
-    `;
-  };
+    `
+  }
 
   const renderPosts = () => {
-    const postsContainer = document.getElementById('posts');
+    const postsContainer = document.getElementById('posts')
     if (state.posts.length === 0) {
-      postsContainer.innerHTML = '';
-      return;
+      postsContainer.innerHTML = ''
+      return
     }
 
     const postsHtml = state.posts.map(post => {
-      const isRead = state.readPosts.has(post.id);
-      const titleClass = isRead ? 'fw-normal' : 'fw-bold';
-      
+      const isRead = state.readPosts.has(post.id)
+      const titleClass = isRead ? 'fw-normal' : 'fw-bold'
+
       return `
         <li class="list-group-item d-flex justify-content-between align-items-start">
           <div class="ms-2 me-auto">
@@ -176,8 +178,8 @@ export default (state, elements, i18n, showPostPreview) => {
             </a>
           </div>
         </li>
-      `;
-    }).join('');
+      `
+    }).join('')
 
     postsContainer.innerHTML = `
       <div class="card">
@@ -193,32 +195,32 @@ export default (state, elements, i18n, showPostPreview) => {
           </ul>
         </div>
       </div>
-    `;
+    `
 
     // Добавляем обработчики событий для кнопок предпросмотра
-    const previewButtons = postsContainer.querySelectorAll('.preview-btn');
-    previewButtons.forEach(button => {
+    const previewButtons = postsContainer.querySelectorAll('.preview-btn')
+    previewButtons.forEach((button) => {
       button.addEventListener('click', (event) => {
-        event.preventDefault();
-        const postId = button.getAttribute('data-post-id');
-        
+        event.preventDefault()
+        const postId = button.getAttribute('data-post-id')
+
         // Немедленно меняем класс ссылки на fw-normal
-        const postLink = button.closest('.list-group-item')?.querySelector('a[target="_blank"]');
-        
+        const postLink = button.closest('.list-group-item')?.querySelector('a[target="_blank"]')
+
         if (postLink) {
-          postLink.classList.remove('fw-bold');
-          postLink.classList.add('fw-normal');
+          postLink.classList.remove('fw-bold')
+          postLink.classList.add('fw-normal')
         }
-        
-        showPostPreview(state, postId);
-      });
-    });
-  };
+
+        showPostPreview(state, postId)
+      })
+    })
+  }
 
   return {
     renderForm,
     renderFeeds,
     renderPosts,
     updateLabels,
-  };
-}; 
+  }
+}

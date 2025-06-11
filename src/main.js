@@ -40,9 +40,9 @@ const updateFeeds = (watchedState) => {
   
   // console.log('Проверяем обновления RSS потоков...');
   
-  const updatePromises = watchedState.feeds.map(feed => 
+  const updatePromises = watchedState.feeds.map((feed) => 
     fetchRSS(feed.url)
-      .then(feedData => {
+      .then((feedData) => {
         // Получаем существующие ссылки на посты для этого фида
         const existingPostLinks = watchedState.posts
           .filter(post => post.feedId === feed.id)
@@ -68,7 +68,7 @@ const updateFeeds = (watchedState) => {
         
         return { success: true, feedUrl: feed.url };
       })
-      .catch(error => {
+      .catch((error) => {
         // console.warn(`Ошибка обновления фида ${feed.url}:`, error.message);
         return { success: false, feedUrl: feed.url, error: error.message };
       })

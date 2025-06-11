@@ -26,12 +26,12 @@ const parseRSS = (rssText) => {
   
   const feed = {
     title: titleElement ? titleElement.textContent.trim() : '',
-    description: descriptionElement ? descriptionElement.textContent.trim() : ''
+    description: descriptionElement ? descriptionElement.textContent.trim() : '',
   };
 
   // Извлекаем посты
   const items = channel.querySelectorAll('item');
-  const posts = Array.from(items).map(item => {
+  const posts = Array.from(items).map((item) => {
     const titleEl = item.querySelector('title');
     const descriptionEl = item.querySelector('description');
     const linkEl = item.querySelector('link');
@@ -42,7 +42,7 @@ const parseRSS = (rssText) => {
       title: titleEl ? titleEl.textContent.trim() : '',
       description: descriptionEl ? descriptionEl.textContent.trim() : '',
       link: linkEl ? linkEl.textContent.trim() : '',
-      pubDate: pubDateEl ? pubDateEl.textContent.trim() : ''
+      pubDate: pubDateEl ? pubDateEl.textContent.trim() : '',
     };
   });
 
@@ -67,7 +67,7 @@ const fetchRSS = async (url) => {
       url,
       title: feed.title,
       description: feed.description,
-      posts
+      posts,
     };
   } catch (error) {
     // Обрабатываем различные типы ошибок

@@ -9,32 +9,32 @@ export const ru = {
     urlExample: 'Пример: https://lorem-rss.herokuapp.com/feed',
     addButton: 'Добавить',
     loadingButton: 'Загрузка...',
-    
+
     // Заголовки разделов
     feedsTitle: 'Фиды',
     postsTitle: 'Посты',
     feedsCount: 'Фиды ({{count}})',
     postsCount: 'Посты ({{count}})',
-    
+
     // Стандартные названия
     noTitle: 'Нет заголовка',
     noDescription: 'Нет описания',
     readButton: 'Читать',
-    
+
     // Модальное окно
     modal: {
       previewTitle: 'Предпросмотр поста',
       readFullArticle: 'Читать статью полностью',
       close: 'Закрыть',
       preview: 'Просмотр',
-      openArticle: 'Открыть статью'
+      openArticle: 'Открыть статью',
     },
-    
+
     // Сообщения об успехе
     success: {
-      feedAdded: 'RSS успешно загружен'
+      feedAdded: 'RSS успешно загружен',
     },
-    
+
     // Коды ошибок - точные тексты для тестов
     errors: {
       required: 'Не должно быть пустым',
@@ -42,7 +42,7 @@ export const ru = {
       duplicate: 'RSS уже существует',
       validationError: 'Произошла ошибка валидации',
       networkError: 'Ошибка сети',
-      invalidRSS: 'Ресурс не содержит валидный RSS'
+      invalidRSS: 'Ресурс не содержит валидный RSS',
     }
-  }
-}; 
+  },
+}

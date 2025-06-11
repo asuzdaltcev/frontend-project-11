@@ -5,7 +5,7 @@ import { en } from './locales/en.js'
 
 const resources = {
   ru,
-  en 
+  en,
 }
 
 const init = () => {
