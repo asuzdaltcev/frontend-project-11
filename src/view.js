@@ -76,7 +76,7 @@ export default (state, elements, i18n, showPostPreview) => {
       submitButton.removeAttribute('disabled');
       clearValidationClasses();
       urlInput.classList.add('is-valid');
-      feedback.innerHTML = `<div class="alert alert-success d-flex align-items-center"><i class="bi bi-check-circle-fill me-2"></i>${i18n.t('success.feedAdded')}</div>`;
+      feedback.innerHTML = `<div class="alert alert-success">${i18n.t('success.feedAdded')}</div>`;
       form.reset();
       // Убираем класс is-valid после сброса формы
       setTimeout(() => clearValidationClasses(), 100);
@@ -91,7 +91,7 @@ export default (state, elements, i18n, showPostPreview) => {
       clearValidationClasses();
       urlInput.classList.add('is-invalid');
       const errorMessage = i18n.t(`errors.${state.form.error}`);
-      feedback.innerHTML = `<div class="alert alert-danger d-flex align-items-center"><i class="bi bi-exclamation-triangle-fill me-2"></i>${errorMessage}</div>`;
+      feedback.innerHTML = `<div class="alert alert-danger">${errorMessage}</div>`;
       urlInput.focus();
       buttonText.textContent = i18n.t('addButton');
       spinner.classList.add('d-none');
@@ -170,7 +170,7 @@ export default (state, elements, i18n, showPostPreview) => {
               data-post-id="${post.id}"
               title="${i18n.t('modal.preview')}"
             >
-              <i class="bi bi-eye"></i>
+              ${i18n.t('modal.preview')}
             </button>
             <a href="${post.link}" class="btn btn-sm btn-outline-secondary" target="_blank" rel="noopener noreferrer" title="${i18n.t('modal.openArticle')}">
               <i class="bi bi-box-arrow-up-right"></i>
