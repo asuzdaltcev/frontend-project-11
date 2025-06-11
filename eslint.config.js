@@ -13,6 +13,9 @@ export default [
         URL: 'readonly',
         FormData: 'readonly',
         setTimeout: 'readonly',
+        clearTimeout: 'readonly',
+        DOMParser: 'readonly',
+        bootstrap: 'readonly',
       },
     },
     rules: {

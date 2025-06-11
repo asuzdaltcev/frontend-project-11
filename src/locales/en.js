@@ -32,8 +32,8 @@ export const en = {
       invalidUrl: 'Link must be a valid URL',
       duplicate: 'RSS feed already exists',
       validationError: 'Validation error occurred',
-      networkError: 'Network error',
-      parsingError: 'RSS parsing error'
+      networkError: 'Network error. Please check your internet connection and try again.',
+      invalidRSS: 'The resource does not contain valid RSS'
     }
   }
 }; 

@@ -1,4 +1,4 @@
-export default (state, elements, i18n) => {
+export default (state, elements, i18n, showPostPreview) => {
   const { form, urlInput, feedback, submitButton } = elements;
 
   const clearValidationClasses = () => {
@@ -30,6 +30,22 @@ export default (state, elements, i18n) => {
     const appDescription = document.querySelector('.card-header p');
     if (appDescription) {
       appDescription.textContent = i18n.t('appDescription');
+    }
+
+    // Обновляем тексты модального окна
+    const modalTitle = document.getElementById('post-preview-modal-label');
+    if (modalTitle) {
+      modalTitle.textContent = i18n.t('modal.previewTitle');
+    }
+
+    const modalReadFullText = document.getElementById('modal-read-full-text');
+    if (modalReadFullText) {
+      modalReadFullText.textContent = i18n.t('modal.readFullArticle');
+    }
+
+    const modalCloseBtn = document.getElementById('modal-close-btn');
+    if (modalCloseBtn) {
+      modalCloseBtn.textContent = i18n.t('modal.close');
     }
   };
 
@@ -102,13 +118,22 @@ export default (state, elements, i18n) => {
       </div>
     `).join('');
 
+    // Индикатор автоматического обновления
+    const updateIndicator = state.feeds.length > 0 ? `
+      <small class="text-muted ms-2">
+        <i class="bi bi-arrow-clockwise me-1"></i>
+        Автообновление каждые 5 сек
+      </small>
+    ` : '';
+
     feedsContainer.innerHTML = `
       <div class="card">
-        <div class="card-header bg-light">
+        <div class="card-header bg-light d-flex justify-content-between align-items-center">
           <h2 class="h5 mb-0 text-secondary">
             <i class="bi bi-collection me-2"></i>
             ${i18n.t('feedsCount', { count: state.feeds.length })}
           </h2>
+          ${updateIndicator}
         </div>
         <div class="card-body">
           ${feedsHtml}
@@ -124,18 +149,36 @@ export default (state, elements, i18n) => {
       return;
     }
 
-    const postsHtml = state.posts.map(post => `
-      <div class="card mb-3">
-        <div class="card-body">
-          <h6 class="card-title">${post.title || i18n.t('noTitle')}</h6>
-          <p class="card-text text-muted">${post.description || i18n.t('noDescription')}</p>
-          <a href="${post.link}" class="btn btn-sm btn-outline-primary post-link" target="_blank" rel="noopener noreferrer">
-            <i class="bi bi-box-arrow-up-right me-1"></i>
-            ${i18n.t('readButton')}
-          </a>
-        </div>
-      </div>
-    `).join('');
+    const postsHtml = state.posts.map(post => {
+      const isRead = state.readPosts.has(post.id);
+      const titleClass = isRead ? 'fw-normal' : 'fw-bold';
+      
+      return `
+        <li class="list-group-item d-flex justify-content-between align-items-start">
+          <div class="ms-2 me-auto">
+            <div class="${titleClass}">
+              <a href="${post.link}" class="text-decoration-none post-link" target="_blank" rel="noopener noreferrer">
+                ${post.title || i18n.t('noTitle')}
+              </a>
+            </div>
+            ${post.description ? `<small class="text-muted">${post.description}</small>` : ''}
+          </div>
+          <div class="btn-group" role="group">
+            <button 
+              type="button" 
+              class="btn btn-sm btn-outline-primary preview-btn" 
+              data-post-id="${post.id}"
+              title="${i18n.t('modal.preview')}"
+            >
+              <i class="bi bi-eye"></i>
+            </button>
+            <a href="${post.link}" class="btn btn-sm btn-outline-secondary" target="_blank" rel="noopener noreferrer" title="${i18n.t('modal.openArticle')}">
+              <i class="bi bi-box-arrow-up-right"></i>
+            </a>
+          </div>
+        </li>
+      `;
+    }).join('');
 
     postsContainer.innerHTML = `
       <div class="card">
@@ -145,11 +188,23 @@ export default (state, elements, i18n) => {
             ${i18n.t('postsCount', { count: state.posts.length })}
           </h2>
         </div>
-        <div class="card-body">
-          ${postsHtml}
+        <div class="card-body p-0">
+          <ul class="list-group list-group-flush">
+            ${postsHtml}
+          </ul>
         </div>
       </div>
     `;
+
+    // Добавляем обработчики событий для кнопок предпросмотра
+    const previewButtons = postsContainer.querySelectorAll('.preview-btn');
+    previewButtons.forEach(button => {
+      button.addEventListener('click', (event) => {
+        event.preventDefault();
+        const postId = button.getAttribute('data-post-id');
+        showPostPreview(state, postId);
+      });
+    });
   };
 
   return {
