@@ -15,8 +15,15 @@ export const createValidationSchema = (existingUrls) => {
   return yup.object().shape({
     url: yup
       .string()
-      .required()
-      .url()
+      .test('is-url', () => ({ code: 'invalidUrl' }), (value) => {
+        if (!value) return false; // Пустое значение тоже невалидный URL
+        try {
+          new URL(value);
+          return true;
+        } catch {
+          return false;
+        }
+      })
       .test('not-duplicate', () => ({ code: 'duplicate' }), (value) => {
         return !existingUrls.includes(value);
       }),
@@ -34,7 +41,7 @@ export const validateUrl = (url, existingUrls) => {
         return 'duplicate';
       }
       
-      if (error.type === 'url') {
+      if (error.type === 'is-url') {
         return 'invalidUrl';
       }
       
@@ -50,7 +57,7 @@ export const validateUrl = (url, existingUrls) => {
           return 'duplicate';
         }
         
-        if (innerError.type === 'url') {
+        if (innerError.type === 'is-url') {
           return 'invalidUrl';
         }
         
