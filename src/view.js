@@ -160,18 +160,18 @@ export default (state, elements, i18n, showPostPreview) => {
               <a href="${post.link}" class="${titleClass}" target="_blank" rel="noopener noreferrer">
                 ${post.title || i18n.t('noTitle')}
               </a>
+              <button 
+                type="button" 
+                class="btn btn-sm btn-outline-primary preview-btn ms-2" 
+                data-post-id="${post.id}"
+                title="${i18n.t('modal.preview')}"
+              >
+                ${i18n.t('modal.preview')}
+              </button>
             </div>
             ${post.description ? `<small class="text-muted">${post.description}</small>` : ''}
           </div>
           <div class="btn-group" role="group">
-            <button 
-              type="button" 
-              class="btn btn-sm btn-outline-primary preview-btn" 
-              data-post-id="${post.id}"
-              title="${i18n.t('modal.preview')}"
-            >
-              ${i18n.t('modal.preview')}
-            </button>
             <a href="${post.link}" class="btn btn-sm btn-outline-secondary" target="_blank" rel="noopener noreferrer" title="${i18n.t('modal.openArticle')}">
               <i class="bi bi-box-arrow-up-right"></i>
             </a>
