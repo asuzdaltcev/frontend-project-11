@@ -40,57 +40,57 @@ const updateFeeds = (watchedState) => {
 
   // console.log('Проверяем обновления RSS потоков...');
 
-  const updatePromises = watchedState.feeds.map((feed) => 
+  const updatePromises = watchedState.feeds.map(feed =>
     fetchRSS(feed.url)
       .then((feedData) => {
         // Получаем существующие ссылки на посты для этого фида
         const existingPostLinks = watchedState.posts
           .filter(post => post.feedId === feed.id)
-          .map(post => post.link);
-        
+          .map(post => post.link)
+
         // Фильтруем только новые посты
         const newPosts = feedData.posts.filter(post => 
           !existingPostLinks.includes(post.link)
-        );
-        
+        )
+
         if (newPosts.length > 0) {
           // console.log(`Найдено ${newPosts.length} новых постов в фиде: ${feed.title}`);
-          
+
           // Добавляем новые посты с привязкой к фиду
           const postsWithFeedId = newPosts.map(post => ({
             ...post,
             feedId: feed.id,
-          }));
-          
+          }))
+
           // Добавляем новые посты в начало списка
-          watchedState.posts.unshift(...postsWithFeedId);
+          watchedState.posts.unshift(...postsWithFeedId)
         }
-        
-        return { success: true, feedUrl: feed.url };
+
+        return { success: true, feedUrl: feed.url }
       })
       .catch((error) => {
         // console.warn(`Ошибка обновления фида ${feed.url}:`, error.message);
-        return { success: false, feedUrl: feed.url, error: error.message };
+        return { success: false, feedUrl: feed.url, error: error.message }
       })
-  );
-  
+  )
+
   // Ждем завершения всех запросов, затем планируем следующую проверку
   Promise.all(updatePromises)
     .then(() => {
       // const successCount = results.filter(r => r.success).length;
       // const errorCount = results.filter(r => !r.success).length;
-      
+
       // console.log(`Обновление завершено: ${successCount} успешно, ${errorCount} ошибок`);
-      
+
       // Планируем следующую проверку только после завершения текущей
-      scheduleNextUpdate(watchedState);
+      scheduleNextUpdate(watchedState)
     })
     .catch(() => {
       // console.error('Критическая ошибка при обновлении фидов:', error);
       // Даже при критической ошибке планируем следующую проверку
-      scheduleNextUpdate(watchedState);
-    });
-};
+      scheduleNextUpdate(watchedState)
+    })
+}
 
 const scheduleNextUpdate = (watchedState) => {
   // Очищаем предыдущий таймер если есть
@@ -98,7 +98,7 @@ const scheduleNextUpdate = (watchedState) => {
     clearTimeout(watchedState.updateTimer)
     watchedState.updateTimer = null
   }
-  
+
   // Планируем следующую проверку через 5 секунд
   watchedState.updateTimer = setTimeout(() => {
     updateFeeds(watchedState)
@@ -108,8 +108,8 @@ const scheduleNextUpdate = (watchedState) => {
 const startAutoUpdate = (watchedState) => {
   // console.log('Запускаем автоматическое обновление RSS потоков');
   // Запускаем первую проверку сразу, затем она будет повторяться каждые 5 сек
-  scheduleNextUpdate(watchedState);
-};
+  scheduleNextUpdate(watchedState)
+}
 
 const stopAutoUpdate = (watchedState) => {
   if (watchedState.updateTimer) {
@@ -122,14 +122,14 @@ const stopAutoUpdate = (watchedState) => {
 const handleFormSubmit = (watchedState) => {
   return (event) => {
     event.preventDefault()
-    
+
     const formData = new FormData(event.target)
     const url = formData.get('url').trim()
 
     watchedState.form.status = 'processing'
-    
+
     const existingUrls = watchedState.feeds.map(feed => feed.url)
-    
+
     validateUrl(url, existingUrls)
       .then((errorCode) => {
         if (errorCode) {
@@ -137,12 +137,11 @@ const handleFormSubmit = (watchedState) => {
           watchedState.form.error = errorCode
           return Promise.reject(new Error('validation_failed'))
         }
-        
+
         // Реальная загрузка RSS
-        return fetchRSS(url);
+        return fetchRSS(url)
       })
       .then((feedData) => {
-
         // Добавляем фид
         watchedState.feeds.push({
           id: feedData.id,
@@ -158,7 +157,6 @@ const handleFormSubmit = (watchedState) => {
         }))
 
         watchedState.posts.unshift(...postsWithFeedId)
-        
         watchedState.form.status = 'success'
         watchedState.form.error = null
 
@@ -203,30 +201,28 @@ const init = () => {
     modalTitle: null,
     modalDescription: null,
     modalLink: null,
-  };
+  }
 
   // Инициализируем i18next
   return i18n.init().then(() => {
     // Инициализируем элементы после загрузки DOM
-    elements.submitButton = document.getElementById('submit-button');
-    elements.modal = document.getElementById('post-preview-modal');
-    elements.modalTitle = document.getElementById('modal-post-title');
-    elements.modalDescription = document.getElementById('modal-post-description');
-    elements.modalLink = document.getElementById('modal-post-link');
-    
-    const view = createView(state, elements, i18n, (state, postId) => showPostPreview(state, postId, elements));
-    
+    elements.submitButton = document.getElementById('submit-button')
+    elements.modal = document.getElementById('post-preview-modal')
+    elements.modalTitle = document.getElementById('modal-post-title')
+    elements.modalDescription = document.getElementById('modal-post-description')
+    elements.modalLink = document.getElementById('modal-post-link')
+    const view = createView(state, elements, i18n, (state, postId) => showPostPreview(state, postId, elements))
     const watchedState = onChange(state, (path) => {
       if (path.startsWith('form')) {
-        view.renderForm();
+        view.renderForm()
       }
       if (path.startsWith('feeds')) {
-        view.renderFeeds();
+        view.renderFeeds()
       }
       if (path.startsWith('posts') || path.startsWith('readPosts')) {
-        view.renderPosts();
+        view.renderPosts()
       }
-    });
+    })
 
     elements.form.addEventListener('submit', handleFormSubmit(watchedState))
 
