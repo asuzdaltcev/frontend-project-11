@@ -1,12 +1,12 @@
 // i18n.js
-import i18next from 'i18next';
-import { ru } from './locales/ru.js';
-import { en } from './locales/en.js';
+import i18next from 'i18next'
+import { ru } from './locales/ru.js'
+import { en } from './locales/en.js'
 
 const resources = {
   ru,
-  en
-};
+  en 
+}
 
 const init = () => {
   return i18next.init({
@@ -17,7 +17,7 @@ const init = () => {
     interpolation: {
       escapeValue: false, // не нужно экранирование для DOM
     },
-  });
-};
+  })
+}
 
-export default { init, t: (key, options) => i18next.t(key, options) }; 
+export default { init, t: (key, options) => i18next.t(key, options) }
