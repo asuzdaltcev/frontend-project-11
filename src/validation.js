@@ -28,10 +28,22 @@ export const validateUrl = (url, existingUrls) => {
   return schema.validate({ url })
     .then(() => null) // нет ошибок
     .catch((error) => {
-      // Возвращаем код ошибки вместо текста
-      if (error.inner && error.inner.length > 0) {
-        return error.inner[0].params?.code || 'validationError';
+      console.log('Validation error:', error);
+      
+      // Проверяем тип ошибки
+      if (error.type === 'not-duplicate') {
+        return 'duplicate';
       }
+      
+      // Возвращаем код ошибки из params
+      if (error.inner && error.inner.length > 0) {
+        const innerError = error.inner[0];
+        if (innerError.type === 'not-duplicate') {
+          return 'duplicate';
+        }
+        return innerError.params?.code || 'validationError';
+      }
+      
       return error.params?.code || 'validationError';
     });
 }; 
