@@ -151,7 +151,7 @@ export default (state, elements, i18n, showPostPreview) => {
       return
     }
 
-    const postsHtml = state.posts.map(post => {
+    const postsHtml = state.posts.map((post) => {
       const isRead = state.readPosts.has(post.id)
       const titleClass = isRead ? 'fw-normal' : 'fw-bold'
 
