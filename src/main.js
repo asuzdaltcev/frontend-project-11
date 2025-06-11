@@ -141,14 +141,13 @@ const handleFormSubmit = (watchedState) => {
         if (errorCode) {
           watchedState.form.status = 'error';
           watchedState.form.error = errorCode;
-          return;
+          return Promise.reject(new Error('validation_failed'));
         }
         
         // Реальная загрузка RSS
         return fetchRSS(url);
       })
       .then((feedData) => {
-        if (!feedData) return; // Если была ошибка валидации
         
         // Добавляем фид
         watchedState.feeds.push({
@@ -175,6 +174,10 @@ const handleFormSubmit = (watchedState) => {
         }
       })
       .catch((error) => {
+        // Не перезаписываем ошибки валидации
+        if (error.message === 'validation_failed') {
+          return; // Ошибка валидации уже обработана
+        }
         watchedState.form.status = 'error';
         watchedState.form.error = error.message || 'networkError';
       });
