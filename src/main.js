@@ -1,45 +1,45 @@
 // main.js
-import './styles.css';
-import onChange from 'on-change';
-import createView from './view.js';
-import { validateUrl } from './validation.js';
-import { fetchRSS } from './rss.js';
-import i18n from './i18n.js';
+import './styles.css'
+import onChange from 'on-change'
+import createView from './view.js'
+import { validateUrl } from './validation.js'
+import { fetchRSS } from './rss.js'
+import i18n from './i18n.js'
 
 const markPostAsRead = (watchedState, postId) => {
   if (!watchedState.readPosts.has(postId)) {
-    watchedState.readPosts.add(postId);
+    watchedState.readPosts.add(postId)
     // Принудительно обновляем отображение постов
-    watchedState.posts = [...watchedState.posts];
+    watchedState.posts = [...watchedState.posts]
   }
-};
+}
 
 const showPostPreview = (watchedState, postId, elements) => {
-  const post = watchedState.posts.find(p => p.id === postId);
-  if (!post) return;
+  const post = watchedState.posts.find(p => p.id === postId)
+  if (!post) return
 
   // Помечаем пост как прочитанный
-  markPostAsRead(watchedState, postId);
+  markPostAsRead(watchedState, postId)
 
   // Заполняем модальное окно
-  elements.modalTitle.textContent = post.title || 'Нет заголовка';
-  elements.modalDescription.innerHTML = post.description || 'Нет описания';
-  elements.modalLink.href = post.link;
+  elements.modalTitle.textContent = post.title || 'Нет заголовка'
+  elements.modalDescription.innerHTML = post.description || 'Нет описания'
+  elements.modalLink.href = post.link
 
   // Показываем модальное окно
-  const modal = new bootstrap.Modal(elements.modal);
-  modal.show();
-};
+  const modal = new bootstrap.Modal(elements.modal)
+  modal.show()
+}
 
 const updateFeeds = (watchedState) => {
   if (watchedState.feeds.length === 0) {
     // Если нет фидов, планируем следующую проверку
-    scheduleNextUpdate(watchedState);
-    return;
+    scheduleNextUpdate(watchedState)
+    return
   }
-  
+
   // console.log('Проверяем обновления RSS потоков...');
-  
+
   const updatePromises = watchedState.feeds.map((feed) => 
     fetchRSS(feed.url)
       .then((feedData) => {
@@ -95,15 +95,15 @@ const updateFeeds = (watchedState) => {
 const scheduleNextUpdate = (watchedState) => {
   // Очищаем предыдущий таймер если есть
   if (watchedState.updateTimer) {
-    clearTimeout(watchedState.updateTimer);
-    watchedState.updateTimer = null;
+    clearTimeout(watchedState.updateTimer)
+    watchedState.updateTimer = null
   }
   
   // Планируем следующую проверку через 5 секунд
   watchedState.updateTimer = setTimeout(() => {
-    updateFeeds(watchedState);
-  }, 5000);
-};
+    updateFeeds(watchedState)
+  }, 5000)
+}
 
 const startAutoUpdate = (watchedState) => {
   // console.log('Запускаем автоматическое обновление RSS потоков');
@@ -113,58 +113,58 @@ const startAutoUpdate = (watchedState) => {
 
 const stopAutoUpdate = (watchedState) => {
   if (watchedState.updateTimer) {
-    clearTimeout(watchedState.updateTimer);
-    watchedState.updateTimer = null;
+    clearTimeout(watchedState.updateTimer)
+    watchedState.updateTimer = null
     // console.log('Автоматическое обновление остановлено');
   }
-};
+}
 
 const handleFormSubmit = (watchedState) => {
   return (event) => {
-    event.preventDefault();
+    event.preventDefault()
     
-    const formData = new FormData(event.target);
-    const url = formData.get('url').trim();
+    const formData = new FormData(event.target)
+    const url = formData.get('url').trim()
 
-    watchedState.form.status = 'processing';
+    watchedState.form.status = 'processing'
     
-    const existingUrls = watchedState.feeds.map(feed => feed.url);
+    const existingUrls = watchedState.feeds.map(feed => feed.url)
     
     validateUrl(url, existingUrls)
       .then((errorCode) => {
         if (errorCode) {
-          watchedState.form.status = 'error';
-          watchedState.form.error = errorCode;
-          return Promise.reject(new Error('validation_failed'));
+          watchedState.form.status = 'error'
+          watchedState.form.error = errorCode
+          return Promise.reject(new Error('validation_failed'))
         }
         
         // Реальная загрузка RSS
         return fetchRSS(url);
       })
       .then((feedData) => {
-        
+
         // Добавляем фид
         watchedState.feeds.push({
           id: feedData.id,
           url: feedData.url,
           title: feedData.title,
           description: feedData.description,
-        });
-        
+        })
+
         // Добавляем посты с привязкой к фиду
         const postsWithFeedId = feedData.posts.map(post => ({
           ...post,
           feedId: feedData.id,
-        }));
+        }))
+
+        watchedState.posts.unshift(...postsWithFeedId)
         
-        watchedState.posts.unshift(...postsWithFeedId);
-        
-        watchedState.form.status = 'success';
-        watchedState.form.error = null;
-        
+        watchedState.form.status = 'success'
+        watchedState.form.error = null
+
         // Запускаем автообновление если это первый фид
         if (watchedState.feeds.length === 1) {
-          startAutoUpdate(watchedState);
+          startAutoUpdate(watchedState)
         }
       })
       .catch((error) => {
@@ -172,11 +172,11 @@ const handleFormSubmit = (watchedState) => {
         if (error.message === 'validation_failed') {
           return; // Ошибка валидации уже обработана
         }
-        watchedState.form.status = 'error';
-        watchedState.form.error = error.message || 'networkError';
-      });
-  };
-};
+        watchedState.form.status = 'error'
+        watchedState.form.error = error.message || 'networkError'
+      })
+  }
+}
 
 const init = () => {
   // Состояние приложения - НЕ глобальное!
@@ -228,19 +228,19 @@ const init = () => {
       }
     });
 
-    elements.form.addEventListener('submit', handleFormSubmit(watchedState));
-    
+    elements.form.addEventListener('submit', handleFormSubmit(watchedState))
+
     // Устанавливаем фокус на поле ввода
-    elements.urlInput.focus();
-    
+    elements.urlInput.focus()
+
     // Устанавливаем переведенные атрибуты
-    view.updateLabels();
-    
+    view.updateLabels()
+
     // Очищаем таймер при закрытии страницы
     window.addEventListener('beforeunload', () => {
-      stopAutoUpdate(watchedState);
-    });
-  });
-};
+      stopAutoUpdate(watchedState)
+    })
+  })
+}
 
-document.addEventListener('DOMContentLoaded', init); 
+document.addEventListener('DOMContentLoaded', init)

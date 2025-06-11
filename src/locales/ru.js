@@ -43,6 +43,6 @@ export const ru = {
       validationError: 'Произошла ошибка валидации',
       networkError: 'Ошибка сети',
       invalidRSS: 'Ресурс не содержит валидный RSS',
-    }
+    },
   },
 }

@@ -34,6 +34,6 @@ export const en = {
       validationError: 'Validation error occurred',
       networkError: 'Network error. Please check your internet connection and try again.',
       invalidRSS: 'The resource does not contain valid RSS',
-    }
-  }
+    },
+  },
 }
