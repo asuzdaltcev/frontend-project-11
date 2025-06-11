@@ -169,7 +169,6 @@ export default (state, elements, i18n, showPostPreview) => {
                 ${i18n.t('modal.preview')}
               </button>
             </div>
-            ${post.description ? `<small class="text-muted">${post.description}</small>` : ''}
           </div>
           <div class="btn-group" role="group">
             <a href="${post.link}" class="btn btn-sm btn-outline-secondary" target="_blank" rel="noopener noreferrer" title="${i18n.t('modal.openArticle')}">
