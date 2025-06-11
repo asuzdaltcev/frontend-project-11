@@ -1,6 +1,7 @@
 // main.js
 import './styles.css'
 import onChange from 'on-change'
+import { Modal } from 'bootstrap'
 import createView from './view.js'
 import { validateUrl } from './validation.js'
 import { fetchRSS } from './rss.js'
@@ -27,7 +28,7 @@ const showPostPreview = (watchedState, postId, elements) => {
   elements.modalLink.href = post.link
 
   // Показываем модальное окно
-  const modal = new bootstrap.Modal(elements.modal)
+  const modal = new Modal(elements.modal)
   modal.show()
 }
 
@@ -49,8 +50,8 @@ const updateFeeds = (watchedState) => {
           .map(post => post.link)
 
         // Фильтруем только новые посты
-        const newPosts = feedData.posts.filter(post => 
-          !existingPostLinks.includes(post.link)
+        const newPosts = feedData.posts.filter(post =>
+          !existingPostLinks.includes(post.link),
         )
 
         if (newPosts.length > 0) {
@@ -71,7 +72,7 @@ const updateFeeds = (watchedState) => {
       .catch((error) => {
         // console.warn(`Ошибка обновления фида ${feed.url}:`, error.message);
         return { success: false, feedUrl: feed.url, error: error.message }
-      })
+      }),
   )
 
   // Ждем завершения всех запросов, затем планируем следующую проверку
@@ -168,7 +169,7 @@ const handleFormSubmit = (watchedState) => {
       .catch((error) => {
         // Не перезаписываем ошибки валидации
         if (error.message === 'validation_failed') {
-          return; // Ошибка валидации уже обработана
+          return // Ошибка валидации уже обработана
         }
         watchedState.form.status = 'error'
         watchedState.form.error = error.message || 'networkError'
@@ -190,7 +191,7 @@ const init = () => {
       postId: null, // ID поста для показа в модальном окне
     },
     updateTimer: null,
-  };
+  }
 
   const elements = {
     form: document.getElementById('rss-form'),
