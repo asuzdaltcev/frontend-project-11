@@ -202,6 +202,15 @@ export default (state, elements, i18n, showPostPreview) => {
       button.addEventListener('click', (event) => {
         event.preventDefault();
         const postId = button.getAttribute('data-post-id');
+        
+        // Немедленно меняем класс ссылки на fw-normal
+        const postLink = button.closest('.list-group-item')?.querySelector('.post-link');
+        
+        if (postLink) {
+          postLink.classList.remove('fw-bold');
+          postLink.classList.add('fw-normal');
+        }
+        
         showPostPreview(state, postId);
       });
     });
