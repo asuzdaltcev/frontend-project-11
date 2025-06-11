@@ -38,7 +38,7 @@ const updateFeeds = (watchedState) => {
     return;
   }
   
-  console.log('Проверяем обновления RSS потоков...');
+  // console.log('Проверяем обновления RSS потоков...');
   
   const updatePromises = watchedState.feeds.map(feed => 
     fetchRSS(feed.url)
@@ -54,7 +54,7 @@ const updateFeeds = (watchedState) => {
         );
         
         if (newPosts.length > 0) {
-          console.log(`Найдено ${newPosts.length} новых постов в фиде: ${feed.title}`);
+          // console.log(`Найдено ${newPosts.length} новых постов в фиде: ${feed.title}`);
           
           // Добавляем новые посты с привязкой к фиду
           const postsWithFeedId = newPosts.map(post => ({
@@ -69,24 +69,24 @@ const updateFeeds = (watchedState) => {
         return { success: true, feedUrl: feed.url };
       })
       .catch(error => {
-        console.warn(`Ошибка обновления фида ${feed.url}:`, error.message);
+        // console.warn(`Ошибка обновления фида ${feed.url}:`, error.message);
         return { success: false, feedUrl: feed.url, error: error.message };
       })
   );
   
   // Ждем завершения всех запросов, затем планируем следующую проверку
   Promise.all(updatePromises)
-    .then(results => {
-      const successCount = results.filter(r => r.success).length;
-      const errorCount = results.filter(r => !r.success).length;
+    .then(() => {
+      // const successCount = results.filter(r => r.success).length;
+      // const errorCount = results.filter(r => !r.success).length;
       
-      console.log(`Обновление завершено: ${successCount} успешно, ${errorCount} ошибок`);
+      // console.log(`Обновление завершено: ${successCount} успешно, ${errorCount} ошибок`);
       
       // Планируем следующую проверку только после завершения текущей
       scheduleNextUpdate(watchedState);
     })
-    .catch(error => {
-      console.error('Критическая ошибка при обновлении фидов:', error);
+    .catch(() => {
+      // console.error('Критическая ошибка при обновлении фидов:', error);
       // Даже при критической ошибке планируем следующую проверку
       scheduleNextUpdate(watchedState);
     });
@@ -106,7 +106,7 @@ const scheduleNextUpdate = (watchedState) => {
 };
 
 const startAutoUpdate = (watchedState) => {
-  console.log('Запускаем автоматическое обновление RSS потоков');
+  // console.log('Запускаем автоматическое обновление RSS потоков');
   // Запускаем первую проверку сразу, затем она будет повторяться каждые 5 сек
   scheduleNextUpdate(watchedState);
 };
@@ -115,7 +115,7 @@ const stopAutoUpdate = (watchedState) => {
   if (watchedState.updateTimer) {
     clearTimeout(watchedState.updateTimer);
     watchedState.updateTimer = null;
-    console.log('Автоматическое обновление остановлено');
+    // console.log('Автоматическое обновление остановлено');
   }
 };
 
