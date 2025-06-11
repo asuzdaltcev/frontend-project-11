@@ -156,8 +156,8 @@ export default (state, elements, i18n, showPostPreview) => {
       return `
         <li class="list-group-item d-flex justify-content-between align-items-start">
           <div class="ms-2 me-auto">
-            <div class="${titleClass}">
-              <a href="${post.link}" class="text-decoration-none post-link" target="_blank" rel="noopener noreferrer">
+            <div>
+              <a href="${post.link}" class="text-decoration-none post-link ${titleClass}" target="_blank" rel="noopener noreferrer">
                 ${post.title || i18n.t('noTitle')}
               </a>
             </div>
