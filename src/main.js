@@ -125,12 +125,6 @@ const handleFormSubmit = (watchedState) => {
     
     const formData = new FormData(event.target);
     const url = formData.get('url').trim();
-    
-    if (!url) {
-      watchedState.form.status = 'error';
-      watchedState.form.error = 'required';
-      return;
-    }
 
     watchedState.form.status = 'processing';
     

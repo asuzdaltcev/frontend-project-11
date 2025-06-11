@@ -28,19 +28,36 @@ export const validateUrl = (url, existingUrls) => {
   return schema.validate({ url })
     .then(() => null) // нет ошибок
     .catch((error) => {
-      console.log('Validation error:', error);
       
       // Проверяем тип ошибки
       if (error.type === 'not-duplicate') {
         return 'duplicate';
       }
       
+      if (error.type === 'url') {
+        return 'invalidUrl';
+      }
+      
+      if (error.type === 'required') {
+        return 'required';
+      }
+      
       // Возвращаем код ошибки из params
       if (error.inner && error.inner.length > 0) {
         const innerError = error.inner[0];
+        
         if (innerError.type === 'not-duplicate') {
           return 'duplicate';
         }
+        
+        if (innerError.type === 'url') {
+          return 'invalidUrl';
+        }
+        
+        if (innerError.type === 'required') {
+          return 'required';
+        }
+        
         return innerError.params?.code || 'validationError';
       }
       

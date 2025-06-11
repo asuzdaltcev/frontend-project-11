@@ -20,17 +20,16 @@
                         <p class="mb-0 mt-1 opacity-75">Добавляйте и читайте RSS-потоки</p>
                     </div>
                     <div class="card-body">
-                        <form id="rss-form">
+                        <form id="rss-form" novalidate>
                             <div class="mb-3">
                                 <label for="url-input" class="form-label fw-bold">URL RSS-потока</label>
                                 <div class="input-group">
                                     <input 
-                                        type="url" 
+                                        type="text" 
                                         class="form-control" 
                                         id="url-input" 
                                         name="url"
                                         placeholder="https://example.com/rss" 
-                                        required
                                         autocomplete="off"
                                         aria-describedby="url-help"
                                         aria-label="url"
