@@ -7,7 +7,7 @@
 
 ## 🚀 Демо
 
-Проект задеплоен на Vercel: https://frontend-project-11-10y384ti1-aleksandrs-projects-4fcf7979.vercel.app
+Проект задеплоен на Vercel: [https://frontend-project-11-10y384ti1-aleksandrs-projects-4fcf7979.vercel.app](https://frontend-project-11-sand-two.vercel.app)
 
 ## Функциональность
 
